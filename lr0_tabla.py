@@ -1,5 +1,6 @@
 # lr0 tabla
 
+
 class matrix:
     def __init__(self, s, o):
         self.sor=s
@@ -11,35 +12,74 @@ class matrix:
         for j in range(0,self.sor):
             self.sorok = []
             for i in range(0,self.oszlop):
-                self.sorok.append(i+j)
+                self.sorok.append("*")
             self.tabla.append(self.sorok)
-        print(self.tabla)    
+            
 
-    def ertek(self,sor,oszlop):
+    def ertek_kiir(self,sor,oszlop):
         print(self.tabla[sor][oszlop])
         return self.tabla[sor][oszlop]
 
-    def kiir(self):
+    def tabla_kiir(self):
 
         for i in range(0,self.sor): 
             for j in range(0,self.oszlop): 
-                print(i,j,":",self.tabla[i][j]," ", end=" ")
+                print(self.tabla[i][j]," ", end=" ")
             print()    
 
+    def legyen(self,sor,oszlop,ertek):
+        self.tabla[sor][oszlop]=ertek
+
 #****************************************************************************************************         
-# Beolvassuk a lr0 adatait tartalmazó file-t
+from pyvis.network import Network
+import networkx as nx
+
+
+
 f = open("c:\SZE-FordProg-2021-SLR-visualization\lr0_auto.txt", "r")
 full_file=f.read()
-print(full_file)
+#print(full_file)pip 
 eol_pos=full_file.find('\n')
-print(eol_pos)
-connections=full_file[:eol_pos]
-nodes=full_file[eol_pos:]
+#print(eol_pos)
+kapcsolatok=full_file[:eol_pos]
+csomopontok=full_file[eol_pos+1:]
 
-print(connections)
-print("+++++++++++++++++++++")
-print(nodes)
+print(kapcsolatok)
+kapcsolatok_lista=kapcsolatok.split(" ")
+print(kapcsolatok_lista)
 tbl=matrix(10,4)
-print(tbl)
-print(tbl.kiir())         
-print(tbl.ertek(8,2))
+print(csomopontok)
+csomopontok_lista=csomopontok.split("\n")
+print(csomopontok_lista)
+sorok_szama=0
+for cs in csomopontok_lista:
+    if int(cs[0:cs.find(" ")])>sorok_szama:
+        sorok_szama=int(cs[0:cs.find(" ")])
+print(sorok_szama)
+nemterminalisok=list()
+terminalisok=list()
+i=2
+while i<len(kapcsolatok_lista):
+    if kapcsolatok_lista[i]>="A" and kapcsolatok_lista[i]<="Z":
+        if kapcsolatok_lista[i] not in nemterminalisok:
+            nemterminalisok.append(kapcsolatok_lista[i])
+    else:
+        if kapcsolatok_lista[i] not in terminalisok:
+            terminalisok.append(kapcsolatok_lista[i])
+    i=i+3
+
+terminalisok.sort()
+nemterminalisok.sort()
+print(terminalisok) 
+print(nemterminalisok)  
+oszlopok_szama=len(terminalisok)+len(nemterminalisok)
+print(oszlopok_szama)
+tbl=matrix(sorok_szama,oszlopok_szama)
+tbl.tabla_kiir()
+
+  
+
+
+
+
+
