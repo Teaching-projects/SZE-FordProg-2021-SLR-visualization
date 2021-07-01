@@ -1,0 +1,116 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1000px;
+            height: 1000px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"id": 0, "label": "0\n\n  \u00a4S \n  S\u00bb\u00a4S-E \n  S\u00bb\u00a4S+E \n  S\u00bb\u00a4E \n  E\u00bb\u00a4E*n \n  E\u00bb\u00a4E/n \n  E\u00bb\u00a4n \n", "shape": "box"}, {"id": 1, "label": "1\n\n  S\u00a4 \n  S\u00bbS\u00a4-E \n  S\u00bbS\u00a4+E \n", "shape": "box"}, {"id": 2, "label": "2\n\n  S\u00bbE\u00a4 \n  E\u00bbE\u00a4*n \n  E\u00bbE\u00a4/n \n", "shape": "box"}, {"id": 3, "label": "3\n\n  E\u00bbn\u00a4 \n", "shape": "box"}, {"id": 4, "label": "4\n\n  S\u00bbS-\u00a4E \n  E\u00bb\u00a4E*n \n  E\u00bb\u00a4E/n \n  E\u00bb\u00a4n \n", "shape": "box"}, {"id": 5, "label": "5\n\n  S\u00bbS+\u00a4E \n  E\u00bb\u00a4E*n \n  E\u00bb\u00a4E/n \n  E\u00bb\u00a4n \n", "shape": "box"}, {"id": 6, "label": "6\n\n  E\u00bbE*\u00a4n \n", "shape": "box"}, {"id": 7, "label": "7\n\n  E\u00bbE/\u00a4n \n", "shape": "box"}, {"id": 8, "label": "8\n\n  S\u00bbS-E\u00a4 \n  E\u00bbE\u00a4*n \n  E\u00bbE\u00a4/n \n", "shape": "box"}, {"id": 9, "label": "9\n\n  S\u00bbS+E\u00a4 \n  E\u00bbE\u00a4*n \n  E\u00bbE\u00a4/n \n", "shape": "box"}, {"id": 10, "label": "10\n\n  E\u00bbE*n\u00a4 \n", "shape": "box"}, {"id": 11, "label": "11\n\n  E\u00bbE/n\u00a4 \n", "shape": "box"}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": 0, "label": "n", "size": 100, "to": 3}, {"arrows": "to", "from": 0, "label": "S", "size": 100, "to": 1}, {"arrows": "to", "from": 0, "label": "E", "size": 100, "to": 2}, {"arrows": "to", "from": 1, "label": "-", "size": 100, "to": 4}, {"arrows": "to", "from": 1, "label": "+", "size": 100, "to": 5}, {"arrows": "to", "from": 4, "label": "n", "size": 100, "to": 3}, {"arrows": "to", "from": 4, "label": "E", "size": 100, "to": 8}, {"arrows": "to", "from": 5, "label": "n", "size": 100, "to": 3}, {"arrows": "to", "from": 5, "label": "E", "size": 100, "to": 9}, {"arrows": "to", "from": 8, "label": "/", "size": 100, "to": 7}, {"arrows": "to", "from": 8, "label": "*", "size": 100, "to": 6}, {"arrows": "to", "from": 9, "label": "/", "size": 100, "to": 7}, {"arrows": "to", "from": 9, "label": "*", "size": 100, "to": 6}, {"arrows": "to", "from": 2, "label": "/", "size": 100, "to": 7}, {"arrows": "to", "from": 2, "label": "*", "size": 100, "to": 6}, {"arrows": "to", "from": 7, "label": "n", "size": 100, "to": 11}, {"arrows": "to", "from": 6, "label": "n", "size": 100, "to": 10}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0,
+            "damping": 0.09,
+            "nodeDistance": 120,
+            "springConstant": 0,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
