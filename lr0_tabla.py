@@ -50,6 +50,37 @@ class matrix:
 
         print("-"*(11+s)*(len(terminalisok)+len(nemterminalisok)))
 
+    def lr_tabla_to_html(self):
+        t=chr(9)
+        htm="<!DOCTYPE html>\n<html>\n"
+        htm=htm+"<head>\n<style>\ntable, th, td {\n"+t+"border: 1px solid black;\n}\n</style>\n</head>"
+        
+        
+        
+        
+        htm=htm+"<body>\n\n<h2>LR(0) HTML Table</h2>\n<table style="+chr(34)+"width:90%"+chr(34)+">\n"
+        htm=htm+t+"<tr>\n"
+        htm=htm+t+t+"<td> # </td>\n"
+        for i in terminalisok:
+            htm=htm+t+t+"<td>"+i+"</td>\n"
+        htm=htm+t+t+"<td>*</td>\n"
+        for i in nemterminalisok:
+            htm=htm+t+t+"<td>"+i+"</td>\n"    
+        htm=htm+t+"</tr>\n"
+
+        for i in range(0,self.sor): 
+            htm=htm+t+"<tr>\n"
+            htm=htm+t+t+"<td>"+str(i)+"</td>\n"
+            for j in range(0,self.oszlop): 
+                htm=htm+t+t+"<td>"+self.tabla[i][j]+"</td>\n"
+                if j==len(terminalisok)-1:
+                    htm=htm+t+t+"<td>*</td>\n"
+            htm=htm+t+"</tr>\n"
+            
+        htm=htm+t+"</tr>\n</table>\n</body>\n</html>\n"
+        return(htm)
+
+
 
     def legyen(self,sor,oszlop,ertek):
         self.tabla[sor][oszlop]=ertek
@@ -68,6 +99,8 @@ def terminalise(s):  # true = terminális, false = nemterminális
 #****************************************************************************************************         
 from pyvis.network import Network
 import networkx as nx
+import base64
+import webbrowser
 
 f = open("c:\SZE-FordProg-2021-SLR-visualization\lr0_auto.txt", "r")
 full_file=f.read()
@@ -138,10 +171,14 @@ for i in range(0,len(szabalyok_lista)):
 
 
 tbl.lr_tabla_kiir()
+html_tbl=tbl.lr_tabla_to_html()
+wf = open("lr_to_html.htm", "w")
+wf.write(html_tbl)
+wf.close()
+webbrowser.open_new_tab("lr_to_html.htm")
 
 
 n=Network("1000px","1000px",directed=True)
-
 for i in range (0,sorok_szama):
     lbl=str(i)+"\n\n"
     for j in range(0,len(szabalyok_lista)):
@@ -151,19 +188,9 @@ for i in range (0,sorok_szama):
            lbl=lbl+" "+szabalyok_lista[j][szabalyok_lista[j].index(" "):]+" \n"
 
     n.add_node(i,shape="box",label=lbl)
-    
-
 i=0
 while i<len(kapcsolatok_lista):
     n.add_edge( int(kapcsolatok_lista[i]) ,int(kapcsolatok_lista[i+1]),label=kapcsolatok_lista[i+2] ,size=100)     
     i=i+3
-
-
-
-
-
-
-
 n.repulsion(node_distance=120, central_gravity=0, spring_length=200, spring_strength=0, damping=0.09)
-#n.show_buttons(filter_=['physics'])
 n.show("lr.html")
